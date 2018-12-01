@@ -3,8 +3,11 @@ var question = require("./question");
 var Schema = mongoose.Schema;
 
 var examinationSchema = new Schema({
-    creator: {type: mongoose.Schema.ObjectId, ref:'user', index: true},
-    question: {type: mongoose.Schema.ObjectId, ref:'question', index: true},
+    user: {type: mongoose.Schema.ObjectId, ref:'user', index: true},//用户名
+    question: {type: mongoose.Schema.ObjectId, ref:'question', index: true},//问题
+    paper:{type: mongoose.Schema.ObjectId, ref:"paper", index: true},//试卷
+    answer: {type: Object},//答案
+    status: {type: Number},//答题状态
     create_date: {type: Date, default: Date.now, index:true},
     update_date: {type: Date, default: Date.now}
 

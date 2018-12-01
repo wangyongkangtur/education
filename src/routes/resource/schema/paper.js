@@ -1,11 +1,9 @@
 var mongoose = require('../db/education.db');
-var question = require("./question");
 var Schema = mongoose.Schema;
 
 var examinationSchema = new Schema({
-    title: {type: String},
-    time: {type: String},
-    creator: {type: mongoose.Schema.ObjectId, ref:"user", index: true},
+    title: {type: String},//标题
+    number: {type: Number},//序号
     create_date: {type: Date, default: Date.now, index:true},
     update_date: {type: Date, default: Date.now}
 });
