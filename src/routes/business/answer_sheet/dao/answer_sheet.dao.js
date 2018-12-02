@@ -1,28 +1,28 @@
 
-var question = require("../../../resource/schema/question");
+var answer_sheet = require("../../../resource/schema/answer_sheet");
 var kit = require('../../../common/util/kit');
 
 
 function create_dao(data, callback) {
-    question.create(data, callback)
+    answer_sheet.create(data, callback)
 }
 
 function delete_dao(conditions, callback) {
-    question.remove(conditions, callback)
+    answer_sheet.remove(conditions, callback)
 }
 
 function update_dao(conditions, data, callback) {
     var options = {"new":true};// true to return the modified document rather than the original. defaults to false
-    question.update(conditions, data, options, callback)
+    answer_sheet.update(conditions, data, options, callback)
 }
 
 
 function retrieve_dao(conditions, field, callback) {
-    question.find(conditions, field).exec(callback);
+    answer_sheet.find(conditions, field).exec(callback);
 }
 
 var pagination_dao = function (options, populate, whereCondition, callback) {
-    kit.pageQuery(options.skip, options.limit, question, populate, whereCondition, options.sort, callback);
+    kit.pageQuery(options.skip, options.limit, answer_sheet, populate, whereCondition, options.sort, callback);
 };
 
 module.exports = {

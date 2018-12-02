@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var examination_service = require('./service/examination.service');
+var answer_sheet_service = require('./service/answer_sheet.service');
 var kit = require('../../common/util/kit');
 var common_response = require('../../common/response');
 
@@ -8,7 +8,7 @@ var create_route = function (req, res) {
     var data = req.body.data;
     var waterfall = [
         function (callback) {
-            examination_service.create_service(data, function (err, doc) {
+            answer_sheet_service.create_service(data, function (err, doc) {
                 if (err) {
                     callback(kit.response(common_response.code.system_error,
                         common_response.message.system_error, null));
@@ -34,7 +34,7 @@ var delete_route = function (req, res) {
     var conditions = req.body.conditions;
     var waterfall = [
         function (callback) {
-            examination_service.delete_service(conditions, function (err, doc) {
+            answer_sheet_service.delete_service(conditions, function (err, doc) {
                 if (err) {
                     callback(kit.response(common_response.code.system_error,
                         common_response.message.system_error, null));
@@ -59,7 +59,7 @@ var update_route = function (req, res) {
     var conditions = req.body.conditions;
     var waterfall = [
         function (callback) {
-            examination_service.update_service(conditions, data, function (err, doc) {
+            answer_sheet_service.update_service(conditions, data, function (err, doc) {
                 if (err) {
                     callback(kit.response(common_response.code.system_error,
                         common_response.message.system_error, null));
@@ -84,7 +84,7 @@ var retrieve_route = function (req, res) {
     var field = null;
     var waterfall = [
         function (callback) {
-            examination_service.retrieve_service(conditions, field, function (err, doc) {
+            answer_sheet_service.retrieve_service(conditions, field, function (err, doc) {
                 if (err) {
                     callback(kit.response(common_response.code.system_error,
                         common_response.message.system_error, null));
@@ -110,7 +110,7 @@ var pagination_route = function (req, res) {
     var whereCondition = null;
     var waterfall = [
         function (callback) {
-            examination_service.pagination_service(options, populate, whereCondition, function (err, doc) {
+            answer_sheet_service.pagination_service(options, populate, whereCondition, function (err, doc) {
                 if (err) {
                     callback(kit.response(common_response.code.system_error,
                         common_response.message.system_error, null));
