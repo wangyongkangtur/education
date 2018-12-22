@@ -14,7 +14,13 @@ var answer_sheet_status ={
     wrong:3//错误
 };
 
+var paper_publish_status ={
+    published:1,//已发布
+    not_publish:2,//未发布
+};
+
 module.exports = {
     "question_type": question_type,
-    "answer_sheet_status": answer_sheet_status
+    "answer_sheet_status": answer_sheet_status,
+    "paper_publish_status": paper_publish_status
 }

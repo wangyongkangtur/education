@@ -15,5 +15,5 @@ var question_schema = new Schema({
     create_date: {type: Date, default: Date.now, index:true},//创建时间
     update_date: {type: Date, default: Date.now}//更新时间
 });
-
-module.exports = mongoose.model("question", question_schema);
+var collectionName = 'question';
+module.exports = mongoose.model("question", question_schema, collectionName);

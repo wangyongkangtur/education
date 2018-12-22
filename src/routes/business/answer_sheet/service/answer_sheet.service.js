@@ -21,11 +21,16 @@ var pagination_service = function (options, populate, whereCondition, callback) 
     answer_sheet_dao.pagination_dao(options, populate, whereCondition, callback);
 };
 
+function retrieve_paper_summary_aggregate_service(user, callback) {
+    answer_sheet_dao.retrieve_paper_summary_aggregate_dao(user, callback);
+}
 
 module.exports = {
     "create_service":create_service,
     "delete_service": delete_service,
     "update_service": update_service,
     "retrieve_service":retrieve_service,
-    "pagination_service": pagination_service
+    "pagination_service": pagination_service,
+    "retrieve_paper_summary_aggregate_service": retrieve_paper_summary_aggregate_service,
+    "retrieve_paper_summary_aggregate_service": retrieve_paper_summary_aggregate_service,
 };

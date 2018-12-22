@@ -11,5 +11,5 @@ var user_schema = new Schema({
     create_date: {type: Date, default: Date.now},
     update_date: {type: Date, default: Date.now}
 });
-
-module.exports = mongoose.model('user', user_schema);
+var collectionName = 'user';
+module.exports = mongoose.model('user', user_schema, collectionName);
