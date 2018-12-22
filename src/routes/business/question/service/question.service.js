@@ -10,15 +10,15 @@ function delete_service(conditions, callback) {
 }
 
 function update_service(conditions, data, callback) {
-    question_dao.update_dao(conditions, data, options, callback)
+    question_dao.update_dao(conditions, data, callback)
 }
 
 function retrieve_service(conditions, field, callback) {
     question_dao.retrieve_dao(conditions, field, callback);
 }
 
-var pagination_service = function (options, populate, whereCondition, callback) {
-    question_dao.pagination_dao(options, populate, whereCondition, callback);
+var pagination_service = function (options, fieldJson, populate, whereCondition, callback) {
+    question_dao.pagination_dao(options, fieldJson, populate, whereCondition, callback);
 };
 
 

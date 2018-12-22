@@ -15,7 +15,7 @@ var kit = {
      * @param sortParams 排序
      * @param callback 回调函数
      */
-    pageQuery : function (page, pageSize, Model, populate, queryParams, sortParams, callback) {
+    pageQuery : function (page, pageSize, Model, fieldJson, populate, queryParams, sortParams, callback) {
         var start = (page - 1) * pageSize;
         var $page = {};
         async.parallel({
@@ -25,7 +25,7 @@ var kit = {
                 });
             },
             records: function (done) {   // 查询一页的记录
-                Model.find(queryParams).skip(start).limit(pageSize).populate(populate).sort(sortParams).exec(function (err, doc) {
+                Model.find(queryParams, fieldJson).skip(start).limit(pageSize).populate(populate).sort(sortParams).exec(function (err, doc) {
                     done(err, doc);
                 });
             }

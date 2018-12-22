@@ -13,7 +13,7 @@ var create_route = function (req, res) {
                     callback(kit.response(common_response.code.system_error,
                         common_response.message.system_error, null));
                 } else {
-                    callback(doc);
+                    callback(null, doc);
                 }
             });
         }
@@ -39,7 +39,7 @@ var delete_route = function (req, res) {
                     callback(kit.response(common_response.code.system_error,
                         common_response.message.system_error, null));
                 } else {
-                    callback(doc);
+                    callback(null, doc);
                 }
             });
         }
@@ -64,7 +64,7 @@ var update_route = function (req, res) {
                     callback(kit.response(common_response.code.system_error,
                         common_response.message.system_error, null));
                 } else {
-                    callback(doc);
+                    callback(null, doc);
                 }
             });
         }
@@ -89,7 +89,7 @@ var retrieve_route = function (req, res) {
                     callback(kit.response(common_response.code.system_error,
                         common_response.message.system_error, null));
                 } else {
-                    callback(doc);
+                    callback(null, doc);
                 }
             });
         }
@@ -106,16 +106,17 @@ var retrieve_route = function (req, res) {
 
 var pagination_route = function (req, res) {
     var options = req.body.options;
-    var populate = req.body.populate;
-    var whereCondition = null;
+    var whereCondition = req.body.conditions;
+    var populate = "";
+    var fieldJson = "";
     var waterfall = [
         function (callback) {
-            question_service.pagination_service(options, populate, whereCondition, function (err, doc) {
+            question_service.pagination_service(options, fieldJson, populate, whereCondition, function (err, doc) {
                 if (err) {
                     callback(kit.response(common_response.code.system_error,
                         common_response.message.system_error, null));
                 } else {
-                    callback(doc);
+                    callback(null, doc);
                 }
             });
         }

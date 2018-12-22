@@ -21,8 +21,8 @@ function retrieve_dao(conditions, field, callback) {
     question.find(conditions, field).exec(callback);
 }
 
-var pagination_dao = function (options, populate, whereCondition, callback) {
-    kit.pageQuery(options.skip, options.limit, question, populate, whereCondition, options.sort, callback);
+var pagination_dao = function (options, fieldJson, populate, whereCondition, callback) {
+    kit.pageQuery(options.skip, options.limit, question, fieldJson, populate, whereCondition, options.sort, callback);
 };
 
 module.exports = {
