@@ -15,7 +15,7 @@ var code = {
     success:200,
     fail:-400,
     invalid_parameters:-1,
-    system_errors:-1,
+    system_error:-1,
 
 
 }

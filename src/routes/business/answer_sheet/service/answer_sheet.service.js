@@ -21,8 +21,12 @@ var pagination_service = function (options, populate, whereCondition, callback) 
     answer_sheet_dao.pagination_dao(options, populate, whereCondition, callback);
 };
 
-function retrieve_paper_summary_aggregate_service(user, callback) {
-    answer_sheet_dao.retrieve_paper_summary_aggregate_dao(user, callback);
+function retrieve_paper_summary_pagination_service(page, page_size, user, paper, callback) {
+    answer_sheet_dao.retrieve_paper_summary_pagination_dao(page, page_size, user, paper, callback);
+}
+
+function retrieve_question_pagination_service(page, page_size, user, paper, callback) {
+    answer_sheet_dao.retrieve_question_pagination_dao(page, page_size, user, paper, callback);
 }
 
 module.exports = {
@@ -31,6 +35,6 @@ module.exports = {
     "update_service": update_service,
     "retrieve_service":retrieve_service,
     "pagination_service": pagination_service,
-    "retrieve_paper_summary_aggregate_service": retrieve_paper_summary_aggregate_service,
-    "retrieve_paper_summary_aggregate_service": retrieve_paper_summary_aggregate_service,
+    "retrieve_paper_summary_pagination_service": retrieve_paper_summary_pagination_service,
+    "retrieve_question_pagination_service": retrieve_question_pagination_service,
 };

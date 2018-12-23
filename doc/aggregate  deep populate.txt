@@ -1,0 +1,40 @@
+db.getCollection('answer_sheet').aggregate(
+[
+{$match:{user:ObjectId("5c1f4d7cd0d1e829c85ffeb6"),paper:ObjectId("5c1f4da2d0d1e829c85ffebc")}},
+{
+    $lookup: { // 左连接
+        from: "question", // 关联到question表
+        localField: "question", // answer_sheet 表关联的字段
+        foreignField: "_id", // question 表关联的字段
+        as: "questions"
+    }
+},
+{
+    $unwind: { // 拆分子数组
+        path: "$questions",
+        preserveNullAndEmptyArrays: true // 空的数组也拆分
+    }
+},
+
+{
+    $lookup: { // 左连接
+        from: "paper", // 关联到user表
+        localField: "questions.paper", // answer_sheet 表关联的字段
+        foreignField: "_id", // user 表关联的字段
+        as: "questions.papers"
+    }
+},
+{
+    $unwind: { // 拆分子数组
+        path: "$questions.papers",
+        preserveNullAndEmptyArrays: true // 空的数组也拆分
+    }
+},
+{$sort:{"questions.number":-1}}, // 试题排序
+
+// {$project:{questions:{paper:1},status:1}},
+{$match:{"questions.number":1}},
+
+{$skip:0},
+{$limit:10}
+])

@@ -2,6 +2,7 @@
 var answer_sheet = require("../../../resource/schema/answer_sheet");
 var kit = require('../../../common/util/kit');
 var mongoose = require('mongoose');
+var async = require('async');
 
 function create_dao(data, callback) {
     answer_sheet.create(data, callback)
@@ -17,66 +18,155 @@ function update_dao(conditions, data, callback) {
 }
 
 
+// function retrieve_dao(conditions, field, callback) {
+//     answer_sheet.find(conditions, field).exec(callback);
+// }
+
 function retrieve_dao(conditions, field, callback) {
-    answer_sheet.find(conditions, field).exec(callback);
+    answer_sheet.find(conditions, field).populate({path: "question", options: {sort: { "question.number": 1 }}}).exec(callback);
 }
+// , populate : {path : 'paper'}
 
-var pagination_dao = function (options, populate, whereCondition, callback) {
+function pagination_dao(options, populate, whereCondition, callback) {
     kit.pageQuery(options.skip, options.limit, answer_sheet, populate, whereCondition, options.sort, callback);
-};
-
-function retrieve_paper_summary_aggregate_dao(user, callback) {
-    answer_sheet.aggregate(
-        [
-            {$match:{user:mongoose.Types.ObjectId(user)}},
-            {
-                $lookup: { // 左连接
-                    from: "user", // 关联到user表
-                    localField: "user", // answer_sheet 表关联的字段
-                    foreignField: "_id", // user 表关联的字段
-                    as: "users"
-                }
-            },
-            {
-                $unwind: { // 拆分子数组
-                    path: "$users",
-                    preserveNullAndEmptyArrays: true // 空的数组也拆分
-                }
-            },
-            {
-                $lookup: { // 左连接
-                    from: "question", // 关联到question表
-                    localField: "question", // answer_sheet 表关联的字段
-                    foreignField: "_id", // ques tion 表关联的字段
-                    as: "questions"
-                }
-            },
-            {
-                $unwind: { // 拆分子数组
-                    path: "$questions",
-                    preserveNullAndEmptyArrays: true // 空的数组也拆分
-                }
-            },
-            {
-                $lookup: { // 左连接
-                    from: "paper", // 关联到paper表
-                    localField: "paper", // answer_sheet 表关联的字段
-                    foreignField: "_id", // paper 表关联的字段
-                    as: "papers"
-                }
-            },
-            {
-                $unwind: { // 拆分子数组
-                    path: "$papers",
-                    preserveNullAndEmptyArrays: true // 空的数组也拆分
-                }
-            },
-            {$sort:{"questions.number":1}}, // 试题排序
-            {$group : {_id: "$paper",paper_name:{$first:"$papers.title"},paper_data:{$first:"$papers.data"},status:{$push: "$status"}}},
-            {$sort:{"paper_data":-1}}   // 试卷排序
-        ], callback)
 }
 
+function retrieve_paper_summary_pagination_dao(page, page_size, user, paper, callback) {
+    var start = (page - 1) * page_size;
+    var $page = {};
+    var match = paper ? {$match:{user: mongoose.Types.ObjectId(user), paper: mongoose.Types.ObjectId(paper)}} : {$match:{user:mongoose.Types.ObjectId(user)}};
+    async.parallel({
+        count: function (callback) {
+            answer_sheet.aggregate(
+                [
+                     match,
+                    {$group : {_id: "$paper"}},
+                    {$count: "count"}
+                ],callback)
+        },
+        records: function (callback) {
+            answer_sheet.aggregate(
+                [
+                     match,
+                    {
+                        $lookup: {
+                            from: "user",
+                            localField: "user",
+                            foreignField: "_id",
+                            as: "users"
+                        }
+                    },
+                    {
+                        $unwind: {
+                            path: "$users",
+                            preserveNullAndEmptyArrays: true
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: "question",
+                            localField: "question",
+                            foreignField: "_id",
+                            as: "questions"
+                        }
+                    },
+                    {
+                        $unwind: {
+                            path: "$questions",
+                            preserveNullAndEmptyArrays: true
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: "paper",
+                            localField: "paper",
+                            foreignField: "_id",
+                            as: "papers"
+                        }
+                    },
+                    {
+                        $unwind: {
+                            path: "$papers",
+                            preserveNullAndEmptyArrays: true
+                        }
+                    },
+                    {$sort:{"questions.number":1}},
+                    {$group : {_id: "$paper",paper_name:{$first:"$papers.title"},paper_data:{$first:"$papers.data"},status:{$push: "$status"}}},
+                    {$sort:{"paper_data":-1}},
+                    {$skip: start},
+                    {$limit: page_size}
+                ], callback)
+        }
+    }, function (err, results) {
+        if (err) {
+            callback(err)
+        } else {
+            $page.total = results.count[0].count;
+            $page.data = results.records;
+            callback(err, $page);
+        }
+    });
+}
+
+
+function retrieve_question_pagination_dao(page, page_size, user, paper, callback) {
+    var start = (page - 1) * page_size;
+    var $page = {};
+    async.parallel({
+        count: function (done) {
+            answer_sheet.aggregate(
+                [
+                    {$match:{user: mongoose.Types.ObjectId(user), paper: mongoose.Types.ObjectId(paper)}},
+                    {$count: "count"}
+                ],done)
+        },
+        records: function (done) {
+            answer_sheet.aggregate(
+                [
+                    {$match:{user: mongoose.Types.ObjectId(user), paper: mongoose.Types.ObjectId(paper)}},
+                    {
+                        $lookup: {
+                            from: "question",
+                            localField: "question",
+                            foreignField: "_id",
+                            as: "questions"
+                        }
+                    },
+                    {
+                        $unwind: {
+                            path: "$questions",
+                            preserveNullAndEmptyArrays: true
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: "paper",
+                            localField: "questions.paper",
+                            foreignField: "_id",
+                            as: "questions.papers"
+                        }
+                    },
+                    {
+                        $unwind: {
+                            path: "$questions.papers",
+                            preserveNullAndEmptyArrays: true
+                        }
+                    },
+                    {$sort:{"questions.number":-1}},
+                    {$skip: start},
+                    {$limit: page_size}
+                ],done)
+        }
+    }, function (err, results) {
+        if (err) {
+            callback(err)
+        } else {
+            $page.total = results.count[0].count;
+            $page.data = results.records;
+            callback(err, $page);
+        }
+    });
+}
 
 module.exports = {
     "create_dao":create_dao,
@@ -84,5 +174,6 @@ module.exports = {
     "update_dao": update_dao,
     "retrieve_dao":retrieve_dao,
     "pagination_dao": pagination_dao,
-    "retrieve_paper_summary_aggregate_dao": retrieve_paper_summary_aggregate_dao
+    "retrieve_paper_summary_pagination_dao": retrieve_paper_summary_pagination_dao,
+    "retrieve_question_pagination_dao": retrieve_question_pagination_dao
 };
