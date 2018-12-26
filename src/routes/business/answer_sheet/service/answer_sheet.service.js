@@ -25,8 +25,8 @@ function retrieve_paper_summary_pagination_service(page, page_size, user, paper,
     answer_sheet_dao.retrieve_paper_summary_pagination_dao(page, page_size, user, paper, callback);
 }
 
-function retrieve_question_pagination_service(page, page_size, user, paper, callback) {
-    answer_sheet_dao.retrieve_question_pagination_dao(page, page_size, user, paper, callback);
+function retrieve_question_pagination_service(page, page_size, user, paper, _id, callback) {
+    answer_sheet_dao.retrieve_question_pagination_dao(page, page_size, user, paper, _id, callback);
 }
 
 module.exports = {
