@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var user_service = require('./service/user.service');
+var user_external_service = require('./service/user.external.service');
 var kit = require('../../common/util/kit');
 var common_response = require('../../common/response');
 
@@ -9,6 +10,17 @@ var create_route = function (req, res) {
     var waterfall = [
         function (callback) {
             user_service.create_service(data, function (err, doc) {
+                if (err) {
+                    callback(kit.response(common_response.code.system_error,
+                        common_response.message.system_error, err));
+                } else {
+                    callback(null, doc);
+                }
+            });
+        },
+        function (doc, callback) {
+            var data = doc._id;
+            user_external_service.create_answer_sheet_service(data, function (err, doc) {
                 if (err) {
                     callback(kit.response(common_response.code.system_error,
                         common_response.message.system_error, err));
@@ -26,8 +38,6 @@ var create_route = function (req, res) {
                 common_response.message.success, doc));
         }
     });
-
-
 };
 
 var delete_route = function (req, res) {
