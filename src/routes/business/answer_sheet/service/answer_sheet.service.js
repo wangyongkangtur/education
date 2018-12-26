@@ -10,7 +10,7 @@ function delete_service(conditions, callback) {
 }
 
 function update_service(conditions, data, callback) {
-    answer_sheet_dao.update_dao(conditions, data, options, callback)
+    answer_sheet_dao.update_dao(conditions, data, callback)
 }
 
 function retrieve_service(conditions, field, callback) {

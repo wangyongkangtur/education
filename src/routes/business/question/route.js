@@ -62,7 +62,7 @@ var update_route = function (req, res) {
             question_service.update_service(conditions, data, function (err, doc) {
                 if (err) {
                     callback(kit.response(common_response.code.system_error,
-                        common_response.message.system_error, null));
+                        common_response.message.system_error, err));
                 } else {
                     callback(null, doc);
                 }
@@ -87,7 +87,7 @@ var retrieve_route = function (req, res) {
             question_service.retrieve_service(conditions, field, function (err, doc) {
                 if (err) {
                     callback(kit.response(common_response.code.system_error,
-                        common_response.message.system_error, null));
+                        common_response.message.system_error, err));
                 } else {
                     callback(null, doc);
                 }
@@ -114,7 +114,7 @@ var pagination_route = function (req, res) {
             question_service.pagination_service(options, fieldJson, populate, whereCondition, function (err, doc) {
                 if (err) {
                     callback(kit.response(common_response.code.system_error,
-                        common_response.message.system_error, null));
+                        common_response.message.system_error, err));
                 } else {
                     callback(null, doc);
                 }
