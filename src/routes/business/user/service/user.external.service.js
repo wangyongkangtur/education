@@ -1,4 +1,5 @@
 var question_service = require('../../question/service/question.service');
+var answer_sheet_service = require('../../answer_sheet/service/answer_sheet.service');
 var answer_sheet = require('../../../resource/schema/answer_sheet');
 
 var create_answer_sheet_service = function (user, callback) {
@@ -22,13 +23,18 @@ var create_answer_sheet_service = function (user, callback) {
             }
             answer_sheet.insertMany(data, function(err,doc) {
 
-            })
+            });
             callback(null, "success");
         }
     });
 };
 
+var delete_answer_sheet_service = function (user, callback) {
+    var conditions = {"user": user};
+    answer_sheet_service.delete_service(conditions, callback);
+};
 
 module.exports = {
-    "create_answer_sheet_service":create_answer_sheet_service
+    "create_answer_sheet_service":create_answer_sheet_service,
+    "delete_answer_sheet_service":delete_answer_sheet_service
 };

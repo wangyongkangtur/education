@@ -18,14 +18,14 @@ var create_route = function (req, res) {
                 }
             });
         },
-        function (doc, callback) {
-            var data = doc._id;
-            user_external_service.create_answer_sheet_service(data, function (err, doc) {
+        function (result, callback) {
+            var data = result._id;
+            user_external_service.create_answer_sheet_service(data, function (err) {
                 if (err) {
                     callback(kit.response(common_response.code.system_error,
                         common_response.message.system_error, err));
                 } else {
-                    callback(null, doc);
+                    callback(null, result);
                 }
             });
         }
@@ -43,6 +43,17 @@ var create_route = function (req, res) {
 var delete_route = function (req, res) {
     var conditions = req.body.conditions;
     var waterfall = [
+        function (callback) {
+            var data = conditions._id;
+            user_external_service.delete_answer_sheet_service(data, function (err) {
+                if (err) {
+                    callback(kit.response(common_response.code.system_error,
+                        common_response.message.system_error, err));
+                } else {
+                    callback(null);
+                }
+            });
+        },
         function (callback) {
             user_service.delete_service(conditions, function (err, doc) {
                 if (err) {
