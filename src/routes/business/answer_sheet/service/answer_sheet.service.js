@@ -10,7 +10,7 @@ function delete_service(conditions, callback) {
 }
 
 function update_service(conditions, data, callback) {
-    answer_sheet_dao.update_dao(conditions, data, options, callback)
+    answer_sheet_dao.update_dao(conditions, data, callback)
 }
 
 function retrieve_service(conditions, field, callback) {
@@ -25,8 +25,8 @@ function retrieve_paper_summary_pagination_service(page, page_size, user, paper,
     answer_sheet_dao.retrieve_paper_summary_pagination_dao(page, page_size, user, paper, callback);
 }
 
-function retrieve_question_pagination_service(page, page_size, user, paper, callback) {
-    answer_sheet_dao.retrieve_question_pagination_dao(page, page_size, user, paper, callback);
+function retrieve_question_pagination_service(page, page_size, user, paper, _id, callback) {
+    answer_sheet_dao.retrieve_question_pagination_dao(page, page_size, user, paper, _id, callback);
 }
 
 module.exports = {

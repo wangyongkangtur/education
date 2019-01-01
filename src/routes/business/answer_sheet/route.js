@@ -166,9 +166,10 @@ var retrieve_question_pagination_route = function (req, res) {
     var page_size = options.limit;
     var user = conditions.user;
     var paper = conditions.paper;
+    var _id = conditions._id;
     var waterfall = [
         function (callback) {
-            answer_sheet_service.retrieve_question_pagination_service(page, page_size, user, paper, function (err, doc) {
+            answer_sheet_service.retrieve_question_pagination_service(page, page_size, user, paper, _id, function (err, doc) {
                 if (err) {
                     callback(kit.response(common_response.code.system_error,
                         common_response.message.system_error, err));

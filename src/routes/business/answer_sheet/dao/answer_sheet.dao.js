@@ -101,7 +101,7 @@ function retrieve_paper_summary_pagination_dao(page, page_size, user, paper, cal
         if (err) {
             callback(err)
         } else {
-            $page.total = results.count[0].count;
+            $page.total = results.count[0] ? results.count[0].count : 0;
             $page.data = results.records;
             callback(err, $page);
         }
@@ -109,21 +109,22 @@ function retrieve_paper_summary_pagination_dao(page, page_size, user, paper, cal
 }
 
 
-function retrieve_question_pagination_dao(page, page_size, user, paper, callback) {
+function retrieve_question_pagination_dao(page, page_size, user, paper, _id, callback) {
     var start = (page - 1) * page_size;
     var $page = {};
+    var match = _id ? {$match:{_id: mongoose.Types.ObjectId(_id)}} : {$match:{user: mongoose.Types.ObjectId(user), paper: mongoose.Types.ObjectId(paper)}};
     async.parallel({
         count: function (done) {
             answer_sheet.aggregate(
                 [
-                    {$match:{user: mongoose.Types.ObjectId(user), paper: mongoose.Types.ObjectId(paper)}},
+                     match,
                     {$count: "count"}
                 ],done)
         },
         records: function (done) {
             answer_sheet.aggregate(
                 [
-                    {$match:{user: mongoose.Types.ObjectId(user), paper: mongoose.Types.ObjectId(paper)}},
+                    match,
                     {
                         $lookup: {
                             from: "question",
@@ -161,7 +162,7 @@ function retrieve_question_pagination_dao(page, page_size, user, paper, callback
         if (err) {
             callback(err)
         } else {
-            $page.total = results.count[0].count;
+            $page.total = results.count[0] ? results.count[0].count : 0;
             $page.data = results.records;
             callback(err, $page);
         }

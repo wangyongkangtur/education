@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var user_service = require('./service/user.service');
+var user_external_service = require('./service/user.external.service');
 var kit = require('../../common/util/kit');
 var common_response = require('../../common/response');
 var https = require('https');
@@ -15,9 +16,20 @@ var create_route = function (req, res) {
             user_service.create_service(data, function (err, doc) {
                 if (err) {
                     callback(kit.response(common_response.code.system_error,
-                        common_response.message.system_error, null));
+                        common_response.message.system_error, err));
                 } else {
                     callback(null, doc);
+                }
+            });
+        },
+        function (result, callback) {
+            var data = result._id;
+            user_external_service.create_answer_sheet_service(data, function (err) {
+                if (err) {
+                    callback(kit.response(common_response.code.system_error,
+                        common_response.message.system_error, err));
+                } else {
+                    callback(null, result);
                 }
             });
         }
@@ -36,10 +48,21 @@ var delete_route = function (req, res) {
     var conditions = req.body.conditions;
     var waterfall = [
         function (callback) {
+            var data = conditions._id;
+            user_external_service.delete_answer_sheet_service(data, function (err) {
+                if (err) {
+                    callback(kit.response(common_response.code.system_error,
+                        common_response.message.system_error, err));
+                } else {
+                    callback(null);
+                }
+            });
+        },
+        function (callback) {
             user_service.delete_service(conditions, function (err, doc) {
                 if (err) {
                     callback(kit.response(common_response.code.system_error,
-                        common_response.message.system_error, null));
+                        common_response.message.system_error, err));
                 } else {
                     callback(null, doc);
                 }
@@ -64,7 +87,7 @@ var update_route = function (req, res) {
             user_service.update_service(conditions, data, function (err, doc) {
                 if (err) {
                     callback(kit.response(common_response.code.system_error,
-                        common_response.message.system_error, null));
+                        common_response.message.system_error, err));
                 } else {
                     callback(null, doc);
                 }
@@ -89,7 +112,7 @@ var retrieve_route = function (req, res) {
             user_service.retrieve_service(conditions, field, function (err, doc) {
                 if (err) {
                     callback(kit.response(common_response.code.system_error,
-                        common_response.message.system_error, null));
+                        common_response.message.system_error, err));
                 } else {
                     callback(null, doc);
                 }
@@ -116,7 +139,7 @@ var pagination_route = function (req, res) {
             user_service.pagination_service(options, fieldJson, populate, whereCondition, function (err, doc) {
                 if (err) {
                     callback(kit.response(common_response.code.system_error,
-                        common_response.message.system_error, null));
+                        common_response.message.system_error, err));
                 } else {
                     callback(null, doc);
                 }

@@ -17,8 +17,12 @@ function retrieve_service(conditions, field, callback) {
     question_dao.retrieve_dao(conditions, field, callback);
 }
 
-var pagination_service = function (options, fieldJson, populate, whereCondition, callback) {
+function pagination_service(options, fieldJson, populate, whereCondition, callback) {
     question_dao.pagination_dao(options, fieldJson, populate, whereCondition, callback);
+}
+
+var retrieve_question_for_published_paper_pagination_service = function (page, page_size, callback) {
+    question_dao.retrieve_question_for_published_paper_pagination_dao(page, page_size, callback);
 };
 
 
@@ -27,5 +31,6 @@ module.exports = {
     "delete_service": delete_service,
     "update_service": update_service,
     "retrieve_service":retrieve_service,
-    "pagination_service": pagination_service
+    "pagination_service": pagination_service,
+    "retrieve_question_for_published_paper_pagination_service": retrieve_question_for_published_paper_pagination_service
 };
