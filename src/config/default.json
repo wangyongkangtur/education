@@ -1,5 +1,10 @@
 {
-  "jwtTokenSecret": "education",  "mongo":{
-    "education"   :"mongodb://192.168.0.39/education"
+  "jwtTokenSecret": "education",
+  "mongo":{
+    "education" :"mongodb://localhost:27017/education"
+  },
+  "wx": {
+    "appid": "wx9218c4285b420e54",
+    "secret": "3819d8394d839299691609f884fc8a74"
   }
 }
